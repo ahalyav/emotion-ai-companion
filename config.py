@@ -3,45 +3,56 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 class Config:
-    # Flask Configuration
+    # Flask
     SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-here')
     DEBUG = True
-    
-    # Audio Configuration - UPDATED to match your system
-    AUDIO_SAMPLE_RATE = 44100  # Changed from 16000 to 44100
+
+    # Audio
+    AUDIO_SAMPLE_RATE = 44100
     AUDIO_CHUNK_SIZE = 1024
     AUDIO_FORMAT = 'float32'
     AUDIO_CHANNELS = 1
-    
-    # Video Configuration
+    AUDIO_SMOOTHING_ALPHA = 0.3      # EMA coefficient for temporal smoothing
+
+    # Video
     CAMERA_INDEX = 0
     FRAME_WIDTH = 640
     FRAME_HEIGHT = 480
     VIDEO_FPS = 30
-    
-    # Model Configuration
+    FACE_ANALYSIS_INTERVAL = 0.5    # seconds between face analysis
+
+    # Models
     AUDIO_MODEL_NAME = "superb/wav2vec2-base-superb-erm"
     FACE_MODEL_NAME = "deepface"
-    
-    # Ollama Configuration
+
+    # Gemini API
+    GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
+    GEMINI_MODEL = 'gemini-1.5-flash'
+
+    # Ollama (optional fallback)
     OLLAMA_BASE_URL = "http://localhost:11434"
     OLLAMA_MODEL = "llama2"
-    
+
     # Emotion Labels
     EMOTION_LABELS = {
         'audio': ['anger', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral'],
         'face': ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral'],
-        'combined': ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral', 'confused']
+        'combined': ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral'],
     }
-    
-    # Fusion Weights
+
+    # Fusion Weights (audio slightly dominant as it's richer signal)
     FUSION_WEIGHTS = {
-        'audio': 0.6,
-        'face': 0.4
+        'audio': 0.55,
+        'face': 0.45,
     }
-    
-    # Recording Configuration
-    MAX_RECORDING_DURATION = 300  # 5 minutes in seconds
+
+    # History / Recording
+    EMOTION_HISTORY_DEPTH = 60       # number of timestamped snapshots to keep
+    MAX_RECORDING_DURATION = 300     # 5 minutes
     SESSION_SAVE_PATH = "recorded_sessions"
     MAX_SESSIONS = 50
+
+    # Chat
+    CHAT_HISTORY_MAX = 10            # rolling chat message pairs kept in context
