@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Session History{% endblock %}
+
+{% block content %}
+<div class="glass-card">
+  <div class="card-header" style="margin-bottom:12px;">
+    <span class="card-icon">🗂️</span>
+    <span class="card-title" style="font-size:1.05em;">Complete Session History</span>
+  </div>
+  <div class="sessions-grid">
+    <div>
+      <div style="font-size:0.8em;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">
+        🎵 Audio Sessions</div>
+      <div id="audioSessionsList">
+        <p class="text-muted text-sm">No sessions yet</p>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:0.8em;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">
+        📹 Video Sessions</div>
+      <div id="videoSessionsList">
+        <p class="text-muted text-sm">No sessions yet</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -420,9 +420,8 @@ def load_saved_sessions():
 # Routes
 # -----------------------------------------------------------------------
 
-@app.route('/')
-def index():
-    status_info = {
+def get_status_info():
+    return {
         'audio': 'Available' if AUDIO_AVAILABLE else 'Not Available',
         'video': 'Available' if VIDEO_AVAILABLE else 'Not Available',
         'fusion': 'Available' if FUSION_AVAILABLE else 'Not Available',
@@ -431,7 +430,26 @@ def index():
         'system': 'Ready to use',
         'audio_detector': 'MFCC Advanced' if 'MFCC' in str(type(audio_detector)) else 'Basic'
     }
-    return render_template('index.html', status=status_info)
+
+
+@app.route('/')
+def dashboard():
+    return render_template('dashboard.html', status=get_status_info())
+
+
+@app.route('/ai-chat')
+def ai_chat():
+    return render_template('ai_chat.html', status=get_status_info())
+
+
+@app.route('/sessions')
+def sessions():
+    return render_template('sessions.html', status=get_status_info())
+
+
+@app.route('/shortcuts')
+def shortcuts():
+    return render_template('shortcuts.html', status=get_status_info())
 
 
 @app.route('/api/emotion')
@@ -979,7 +997,8 @@ if __name__ == '__main__':
     print("=" * 55)
 
     try:
-        app.run(debug=True, host='0.0.0.0', port=5000, use_reloader=False)
+        port = int(os.environ.get("PORT", 5001))
+        app.run(debug=True, host='0.0.0.0', port=port, use_reloader=False)
     except KeyboardInterrupt:
         print("\n🛑 Shutting down...")
     finally:

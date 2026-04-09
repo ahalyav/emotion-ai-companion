@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Keyboard Shortcuts{% endblock %}
+
+{% block content %}
+<div style="display:flex; justify-content:center; padding-top:20px;">
+  <div class="glass-card" style="width:100%; max-width:600px;">
+    <div class="card-header">
+      <span class="card-icon">⌨️</span>
+      <span class="card-title">Keyboard Shortcuts Reference</span>
+    </div>
+    <div style="padding: 20px;">
+      <div class="shortcut-row" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border);">
+        <span>Toggle all recording</span><kbd>Space</kbd>
+      </div>
+      <div class="shortcut-row" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border);">
+        <span>Start audio recording</span><kbd>A</kbd>
+      </div>
+      <div class="shortcut-row" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border);">
+        <span>Start video recording</span><kbd>V</kbd>
+      </div>
+      <div class="shortcut-row" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border);">
+        <span>Get AI feedback</span><kbd>F</kbd>
+      </div>
+      <div class="shortcut-row" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border);">
+        <span>Show / hide shortcuts overlay</span><kbd>?</kbd>
+      </div>
+      <div class="shortcut-row" style="display:flex; justify-content:space-between; padding:12px 0;">
+        <span>Stop all &amp; close overlay</span><kbd>Esc</kbd>
+      </div>
+    </div>
+    <div style="margin-top:20px; padding:20px; background:rgba(255,255,255,0.03); border-radius:var(--radius-md);">
+      <p style="font-size:0.9em; color:var(--text-muted); line-height:1.5;">
+        These shortcuts are available globally throughout the application. The <kbd>?</kbd> key can be used to quickly show the overlay on any page.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

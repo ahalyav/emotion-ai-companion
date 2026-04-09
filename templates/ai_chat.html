@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}AI Companion Chat{% endblock %}
+
+{% block content %}
+<div style="display:flex; justify-content:center; padding-top:20px;">
+  <div class="glass-card glow-purple" style="width:100%; max-width:800px; height:70vh; display:flex; flex-direction:column;">
+    <div class="card-header">
+      <span class="card-icon">💬</span>
+      <span class="card-title">AI Companion Chat</span>
+    </div>
+    <div class="chat-messages" id="chatMessages" style="flex:1;">
+      <div class="chat-bubble assistant">
+        Hello! I'm your Emotion AI Companion. I'm here to listen and support you. How are you feeling today? 😊
+      </div>
+    </div>
+    <div class="chat-input-row" style="padding:16px; border-top:1px solid var(--border);">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Type your message here..." autocomplete="off">
+      <button class="btn btn-purple btn-icon" id="chatSendBtn" title="Send">➤</button>
+    </div>
+  </div>
+</div>
+{% endblock %}

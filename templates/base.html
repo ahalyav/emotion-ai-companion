@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emotion AI Companion</title>
+  <meta name="description" content="Real-time multi-modal emotion detection with audio, video, and AI companion chat.">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Design System -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+
+<body>
+
+  <!-- ================================================================
+     Keyboard-Shortcuts Overlay
+     ================================================================ -->
+  <div id="shortcuts-overlay" role="dialog" aria-label="Keyboard shortcuts">
+    <div class="shortcuts-box">
+      <h2>⌨️ Keyboard Shortcuts</h2>
+      <div class="shortcut-row"><span>Toggle all recording</span><kbd>Space</kbd></div>
+      <div class="shortcut-row"><span>Start audio recording</span><kbd>A</kbd></div>
+      <div class="shortcut-row"><span>Start video recording</span><kbd>V</kbd></div>
+      <div class="shortcut-row"><span>Get AI feedback</span><kbd>F</kbd></div>
+      <div class="shortcut-row"><span>Show / hide shortcuts</span><kbd>?</kbd></div>
+      <div class="shortcut-row"><span>Stop all &amp; close</span><kbd>Esc</kbd></div>
+      <div style="margin-top:20px;text-align:center">
+        <button class="btn btn-ghost btn-sm" onclick="closeShortcutsOverlay()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+     Toast Container
+     ================================================================ -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <!-- ================================================================
+     App Wrapper
+     ================================================================ -->
+  <div class="app-wrapper" id="appWrapper">
+
+    <!-- ---- Sidebar ---- -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">🧠</div>
+        <div>
+          <div class="logo-text">Emotion AI</div>
+          <div class="logo-sub">Companion v2</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="/" class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
+          <span class="nav-icon">📊</span> Dashboard
+        </a>
+        <a href="/ai-chat" class="nav-item {% if request.endpoint == 'ai_chat' %}active{% endif %}">
+          <span class="nav-icon">💬</span> AI Chat
+        </a>
+        <a href="/sessions" class="nav-item {% if request.endpoint == 'sessions' %}active{% endif %}">
+          <span class="nav-icon">🗂️</span> Sessions
+        </a>
+        <a href="/shortcuts" class="nav-item {% if request.endpoint == 'shortcuts' %}active{% endif %}">
+          <span class="nav-icon">⌨️</span> Shortcuts
+        </a>
+      </nav>
+
+      <!-- System Status -->
+      <div class="sidebar-status">
+        <h4>System Status</h4>
+        <div class="status-row">
+          Audio
+          <div class="status-dot {% if status.audio == 'Available' %}active{% else %}inactive{% endif %}"
+            id="audioStatusDot"></div>
+        </div>
+        <div class="status-row">
+          Video
+          <div class="status-dot {% if status.video == 'Available' %}active{% else %}inactive{% endif %}"
+            id="videoStatusDot"></div>
+        </div>
+        <div class="status-row">
+          Fusion
+          <div class="status-dot ready" id="fusionDot"></div>
+        </div>
+        <div class="status-row">
+          AI LLM
+          <div class="status-dot {% if status.llm == 'Available' %}active{% else %}ready{% endif %}" id="llmDot"></div>
+        </div>
+        <div class="status-row" style="margin-top:8px;font-size:0.72em;color:var(--text-muted)">
+          {{ status.audio_detector }}
+        </div>
+      </div>
+    </aside>
+
+    <!-- ---- Main Content ---- -->
+    <main class="main-content">
+
+      <!-- Top Bar -->
+      <div class="topbar">
+        <div>
+          <div class="topbar-title">{% block title %}Emotion Dashboard{% endblock %}</div>
+          <div style="font-size:0.8em;color:var(--text-muted)" id="systemStatusText">{{ status.system }}</div>
+        </div>
+        <div class="topbar-timer" id="recordingTimer">00:00</div>
+      </div>
+
+      {% block content %}{% endblock %}
+
+    </main>
+  </div>
+  <!-- /app-wrapper -->
+
+  <!-- App JS (after DOM) -->
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+
+</html>

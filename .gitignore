@@ -4,9 +4,14 @@ __pycache__/
 *.so
 
 # Virtual environments
+.venv/
 emotion_env/
 venv/
 env/
+
+# Workspace
+.agents/
+.gemini/
 
 # Distribution / packaging
 *.egg-info/

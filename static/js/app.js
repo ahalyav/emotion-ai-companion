@@ -19,6 +19,7 @@ const Toast = {
     const el = document.createElement('div');
     el.className = `toast ${type}`;
     el.innerHTML = `<span>${icons[type] || '💬'}</span><span>${message}</span>`;
+    if (!this.container) return;
     this.container.appendChild(el);
     setTimeout(() => {
       el.classList.add('removing');
@@ -55,7 +56,7 @@ const ConfidenceRing = {
     const pctEl = document.getElementById('ringPct');
     if (!fill) return;
     const dash = this.circumference * (1 - pct / 100);
-    fill.style.strokeDashoffset = dash.toFixed(2);
+    if (fill) fill.style.strokeDashoffset = dash.toFixed(2);
     if (pctEl) pctEl.textContent = `${Math.round(pct)}%`;
   }
 };
@@ -327,9 +328,10 @@ const Chat = {
     const box = document.getElementById('chatMessages');
     if (!box) return;
     // Remove typing indicator if present
-    const typing = box.querySelector('.typing');
+    const typing = box ? box.querySelector('.typing') : null;
     if (typing) typing.remove();
 
+    if (!box) return;
     const bubble = document.createElement('div');
     bubble.className = `chat-bubble ${role}`;
     bubble.textContent = text;
@@ -345,7 +347,7 @@ const Chat = {
     indicator.className = 'chat-bubble assistant typing';
     indicator.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
     box.appendChild(indicator);
-    box.scrollTop = box.scrollHeight;
+    if (box) box.scrollTop = box.scrollHeight;
   },
 
   async send() {
