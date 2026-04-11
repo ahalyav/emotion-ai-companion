@@ -51,13 +51,13 @@ function emotionMeta(e) {
 // -----------------------------------------------------------------------
 const ConfidenceRing = {
   circumference: 2 * Math.PI * 44,  // r=44
-  update(pct) {
+  update(pct, labelOverride = null) {
     const fill = document.getElementById('ringFill');
     const pctEl = document.getElementById('ringPct');
     if (!fill) return;
     const dash = this.circumference * (1 - pct / 100);
     if (fill) fill.style.strokeDashoffset = dash.toFixed(2);
-    if (pctEl) pctEl.textContent = `${Math.round(pct)}%`;
+    if (pctEl) pctEl.textContent = labelOverride ? labelOverride : `${Math.round(pct)}%`;
   }
 };
 
@@ -422,17 +422,34 @@ const EmotionState = {
 
   updateUI(status) {
     const d = this.current;
-    const meta = emotionMeta(d.current_emotion);
 
     // Main emotion display
     const emojiEl = document.getElementById('mainEmoji');
     const labelEl = document.getElementById('mainLabel');
-    if (emojiEl) emojiEl.textContent = meta.emoji;
-    if (labelEl) {
-      labelEl.textContent = d.current_emotion || 'neutral';
-      labelEl.className = `emotion-label-big ${meta.cssClass}`;
+    
+    if (!_isRecording) {
+      if (emojiEl) emojiEl.textContent = '🙂';
+      if (labelEl) {
+        labelEl.innerHTML = 'Waiting for emotion detection<br><span style="font-size:0.55em;color:var(--text-muted);font-weight:normal;display:block;margin-top:4px;">Start recording to begin analysis</span>';
+        labelEl.className = 'emotion-label-big e-neutral';
+      }
+      ConfidenceRing.update(0, '--');
+    } else if ((d.confidence || 0) === 0 && (d.audio_confidence || 0) === 0 && (d.face_confidence || 0) === 0) {
+      if (emojiEl) emojiEl.textContent = '⏳';
+      if (labelEl) {
+        labelEl.textContent = 'Analyzing emotion...';
+        labelEl.className = 'emotion-label-big e-neutral';
+      }
+      ConfidenceRing.update(0, '--');
+    } else {
+      const meta = emotionMeta(d.current_emotion);
+      if (emojiEl) emojiEl.textContent = meta.emoji;
+      if (labelEl) {
+        labelEl.textContent = d.current_emotion || 'neutral';
+        labelEl.className = `emotion-label-big ${meta.cssClass}`;
+      }
+      ConfidenceRing.update((d.confidence || 0) * 100);
     }
-    ConfidenceRing.update((d.confidence || 0) * 100);
 
     // Mini cards
     this._updateMiniCard('audio', d.audio_emotion, d.audio_confidence);
@@ -483,6 +500,14 @@ const EmotionState = {
     const val = document.getElementById(`${type}EmotionVal`);
     const conf = document.getElementById(`${type}ConfVal`);
     const fill = document.getElementById(`${type}ConfFill`);
+    
+    if (!_isRecording || (!confidence && !emotion)) {
+      if (val) { val.textContent = '—'; val.className = 'mini-card-value e-neutral'; }
+      if (conf) conf.textContent = '--';
+      if (fill) fill.style.width = '0%';
+      return;
+    }
+    
     const meta = emotionMeta(emotion);
     if (val) { val.textContent = emotion || '—'; val.className = `mini-card-value ${meta.cssClass}`; }
     if (conf) conf.textContent = `${((confidence || 0) * 100).toFixed(1)}%`;
@@ -702,6 +727,7 @@ function setRecordingUI(active) {
   setBtnState('btnStopAudio', active);
   setBtnState('btnStartVideo', !active);
   setBtnState('btnStopVideo', active);
+  setBtnState('btnAIFeedback', active);
   const wrapper = document.getElementById('appWrapper');
   if (wrapper) {
     if (active) wrapper.classList.add('recording');
